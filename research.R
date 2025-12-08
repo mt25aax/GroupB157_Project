@@ -74,3 +74,10 @@ cat(sprintf("  R-squared:          %.6f (%.2f%% variance explained)\n\n",
 r_abs <- abs(pearson_test$estimate)
 effect_size <- if (r_abs < 0.1) "Negligible" else if (r_abs < 0.3) "Small" else if (r_abs < 0.5) "Medium" else "Large"
 cat(sprintf("  Effect Size:        %s\n\n", effect_size))
+# Spearman Correlation
+spearman_test <- cor.test(helium_data$Volume, helium_data$Close, method = "spearman", exact = FALSE)
+cat(sprintf("SPEARMAN: rho = %.6f, p = %.4e\n", spearman_test$estimate, spearman_test$p.value))
+
+# Kendall Correlation
+kendall_test <- cor.test(helium_data$Volume, helium_data$Close, method = "kendall")
+cat(sprintf("KENDALL:  tau = %.6f, p = %.4e\n\n", kendall_test$estimate, kendall_test$p.value))
