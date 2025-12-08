@@ -20,3 +20,7 @@ cat(sprintf("  Variables: %d\n", ncol(helium_data)))
 cat(sprintf("  Date Range: %s to %s\n", min(helium_data$Date), max(helium_data$Date)))
 cat(sprintf("  Duration: %.1f months\n\n", 
             as.numeric(difftime(max(helium_data$Date), min(helium_data$Date), units = "weeks"))/4.33))
+#first five observation
+cat("First 5 Observations:\n")
+print(head(helium_data, 5))
+cat("\n")
