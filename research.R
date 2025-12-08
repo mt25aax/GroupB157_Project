@@ -24,3 +24,28 @@ cat(sprintf("  Duration: %.1f months\n\n",
 cat("First 5 Observations:\n")
 print(head(helium_data, 5))
 cat("\n")
+
+# Descriptive Statistics Function
+compute_stats <- function(x, name) {
+  cat(sprintf("%s Statistics:\n", name))
+  cat(sprintf("  Count:    %d\n", length(x)))
+  cat(sprintf("  Mean:     %.6f\n", mean(x, na.rm = TRUE)))
+  cat(sprintf("  Median:   %.6f\n", median(x, na.rm = TRUE)))
+  cat(sprintf("  Std Dev:  %.6f\n", sd(x, na.rm = TRUE)))
+  cat(sprintf("  Variance: %.6f\n", var(x, na.rm = TRUE)))
+  cat(sprintf("  Min:      %.6f\n", min(x, na.rm = TRUE)))
+  cat(sprintf("  Max:      %.6f\n", max(x, na.rm = TRUE)))
+  cat(sprintf("  Range:    %.6f\n", max(x) - min(x)))
+  cat(sprintf("  Q1:       %.6f\n", quantile(x, 0.25)))
+  cat(sprintf("  Q3:       %.6f\n", quantile(x, 0.75)))
+  cat(sprintf("  IQR:      %.6f\n", IQR(x)))
+  
+  # Skewness and Kurtosis (manual calculation)
+  n <- length(x)
+  m <- mean(x)
+  s <- sd(x)
+  skew <- (sum((x - m)^3) / n) / (s^3)
+  kurt <- (sum((x - m)^4) / n) / (s^4) - 3
+  cat(sprintf("  Skewness: %.6f\n", skew))
+  cat(sprintf("  Kurtosis: %.6f\n\n", kurt))
+}
