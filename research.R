@@ -81,3 +81,11 @@ cat(sprintf("SPEARMAN: rho = %.6f, p = %.4e\n", spearman_test$estimate, spearman
 # Kendall Correlation
 kendall_test <- cor.test(helium_data$Volume, helium_data$Close, method = "kendall")
 cat(sprintf("KENDALL:  tau = %.6f, p = %.4e\n\n", kendall_test$estimate, kendall_test$p.value))
+
+# Spearman Correlation
+spearman_test <- cor.test(helium_data$Volume, helium_data$Close, method = "spearman", exact = FALSE)
+cat(sprintf("SPEARMAN: rho = %.6f, p = %.4e\n", spearman_test$estimate, spearman_test$p.value))
+
+# Kendall Correlation
+kendall_test <- cor.test(helium_data$Volume, helium_data$Close, method = "kendall")
+cat(sprintf("KENDALL:  tau = %.6f, p = %.4e\n\n", kendall_test$estimate, kendall_test$p.value))
