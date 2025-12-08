@@ -101,3 +101,16 @@ cat(sprintf("\nR-squared: %.6f | Adjusted R-squared: %.6f\n",
             model_summary$r.squared, model_summary$adj.r.squared))
 cat(sprintf("Regression Equation: Close = %.6f + (%.12f * Volume)\n\n", 
             coef(model)[1], coef(model)[2]))
+# Contingency Table
+cat("CONTINGENCY TABLE ANALYSIS\n")
+cat("==========================\n\n")
+
+helium_data$Volume_Cat <- ifelse(helium_data$Volume > median(helium_data$Volume), 
+                                 "High Volume", "Low Volume")
+helium_data$Price_Cat <- ifelse(helium_data$Close > median(helium_data$Close), 
+                                "High Price", "Low Price")
+contingency <- table(helium_data$Volume_Cat, helium_data$Price_Cat)
+print(contingency)
+chi_test <- chisq.test(contingency)
+cat(sprintf("\nChi-Square: %.4f, df = %d, p = %.4e\n\n", 
+            chi_test$statistic, chi_test$parameter, chi_test$p.value))
