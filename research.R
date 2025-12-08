@@ -69,3 +69,8 @@ cat(sprintf("  95%% CI:            [%.6f, %.6f]\n",
 r_squared <- pearson_test$estimate^2
 cat(sprintf("  R-squared:          %.6f (%.2f%% variance explained)\n\n", 
             r_squared, r_squared * 100))
+
+# Effect size interpretation
+r_abs <- abs(pearson_test$estimate)
+effect_size <- if (r_abs < 0.1) "Negligible" else if (r_abs < 0.3) "Small" else if (r_abs < 0.5) "Medium" else "Large"
+cat(sprintf("  Effect Size:        %s\n\n", effect_size))
