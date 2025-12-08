@@ -49,3 +49,23 @@ compute_stats <- function(x, name) {
   cat(sprintf("  Skewness: %.6f\n", skew))
   cat(sprintf("  Kurtosis: %.6f\n\n", kurt))
 }
+compute_stats(helium_data$Close, "Closing Price (USD)")
+compute_stats(helium_data$Volume, "Trading Volume")
+# Correlation Analysis
+cat("SECTION: CORRELATION ANALYSIS\n")
+cat("=============================\n\n")
+
+# Pearson Correlation Test
+pearson_test <- cor.test(helium_data$Volume, helium_data$Close, method = "pearson")
+cat("PEARSON PRODUCT-MOMENT CORRELATION TEST\n")
+cat("Hypotheses: H0: rho = 0 vs H1: rho != 0\n\n")
+cat(sprintf("  Pearson r:          %.6f\n", pearson_test$estimate))
+cat(sprintf("  t-statistic:        %.6f\n", pearson_test$statistic))
+cat(sprintf("  Degrees of freedom: %d\n", pearson_test$parameter))
+cat(sprintf("  P-value:            %.4e\n", pearson_test$p.value))
+cat(sprintf("  95%% CI:            [%.6f, %.6f]\n", 
+            pearson_test$conf.int[1], pearson_test$conf.int[2]))
+
+r_squared <- pearson_test$estimate^2
+cat(sprintf("  R-squared:          %.6f (%.2f%% variance explained)\n\n", 
+            r_squared, r_squared * 100))
