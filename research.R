@@ -89,3 +89,15 @@ cat(sprintf("SPEARMAN: rho = %.6f, p = %.4e\n", spearman_test$estimate, spearman
 # Kendall Correlation
 kendall_test <- cor.test(helium_data$Volume, helium_data$Close, method = "kendall")
 cat(sprintf("KENDALL:  tau = %.6f, p = %.4e\n\n", kendall_test$estimate, kendall_test$p.value))
+cat("LINEAR REGRESSION ANALYSIS\n")
+cat("==========================\n\n")
+
+model <- lm(Close ~ Volume, data = helium_data)
+model_summary <- summary(model)
+
+cat("Model: Close = B0 + B1 * Volume + error\n\n")
+print(model_summary$coefficients)
+cat(sprintf("\nR-squared: %.6f | Adjusted R-squared: %.6f\n", 
+            model_summary$r.squared, model_summary$adj.r.squared))
+cat(sprintf("Regression Equation: Close = %.6f + (%.12f * Volume)\n\n", 
+            coef(model)[1], coef(model)[2]))
