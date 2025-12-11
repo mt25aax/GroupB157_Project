@@ -114,3 +114,103 @@ print(contingency)
 chi_test <- chisq.test(contingency)
 cat(sprintf("\nChi-Square: %.4f, df = %d, p = %.4e\n\n", 
             chi_test$statistic, chi_test$parameter, chi_test$p.value))
+# Generate Visualizations
+cat("GENERATING VISUALIZATIONS\n")
+cat("=========================\n\n")
+
+# 1. Scatter Plot
+png("output/01_scatter_regression.png", width = 1000, height = 700, res = 120)
+par(mar = c(5, 5, 4, 2))
+plot(helium_data$Volume / 1e6, helium_data$Close,
+     pch = 19, col = adjustcolor("#2E86AB", alpha.f = 0.5),
+     xlab = "Trading Volume (Millions)", ylab = "Closing Price (USD)",
+     main = "Helium (HNT): Trading Volume vs Closing Price")
+abline(lm(Close ~ I(Volume/1e6), data = helium_data), col = "#E94F37", lwd = 2)
+legend("topright", legend = c("Data Points", "Regression Line"),
+       col = c("#2E86AB", "#E94F37"), pch = c(19, NA), lty = c(NA, 1), lwd = c(NA, 2))
+mtext(paste("r =", round(pearson_test$estimate, 4), "| p <", 
+            format(pearson_test$p.value, digits = 3, scientific = TRUE)), 
+      side = 3, line = 0, cex = 0.9)
+dev.off()
+cat("  Saved: output/01_scatter_regression.png\n")
+
+# 2. Histogram - Close
+png("output/02_histogram_close.png", width = 1000, height = 700, res = 120)
+hist(helium_data$Close, breaks = 40, col = "#2E86AB", border = "white",
+     main = "Distribution of Helium Closing Prices",
+     xlab = "Closing Price (USD)", ylab = "Frequency")
+abline(v = mean(helium_data$Close), col = "#28A745", lwd = 2, lty = 2)
+abline(v = median(helium_data$Close), col = "#FFC107", lwd = 2, lty = 3)
+legend("topright", legend = c(paste("Mean = $", round(mean(helium_data$Close), 2)),
+                              paste("Median = $", round(median(helium_data$Close), 2))),
+       col = c("#28A745", "#FFC107"), lty = c(2, 3), lwd = 2)
+dev.off()
+cat("  Saved: output/02_histogram_close.png\n")
+
+# 3. Histogram - Volume
+png("output/03_histogram_volume.png", width = 1000, height = 700, res = 120)
+hist(helium_data$Volume / 1e6, breaks = 40, col = "#6C5B7B", border = "white",
+     main = "Distribution of Helium Trading Volume",
+     xlab = "Trading Volume (Millions)", ylab = "Frequency")
+abline(v = mean(helium_data$Volume) / 1e6, col = "#28A745", lwd = 2, lty = 2)
+abline(v = median(helium_data$Volume) / 1e6, col = "#FFC107", lwd = 2, lty = 3)
+dev.off()
+cat("  Saved: output/03_histogram_volume.png\n")
+
+# 4. Time Series
+png("output/04_time_series.png", width = 1200, height = 700, res = 120)
+par(mar = c(5, 5, 4, 5))
+plot(helium_data$Date, helium_data$Close, type = "l", col = "#2E86AB", lwd = 1.5,
+     xlab = "Date", ylab = "Closing Price (USD)",
+     main = "Helium (HNT) Price and Volume Over Time (June 2020 - May 2022)")
+par(new = TRUE)
+plot(helium_data$Date, helium_data$Volume / 1e6, type = "h", 
+     col = adjustcolor("#6C5B7B", alpha.f = 0.4),
+     axes = FALSE, xlab = "", ylab = "")
+axis(4, col = "#6C5B7B", col.axis = "#6C5B7B")
+mtext("Volume (Millions)", side = 4, line = 3, col = "#6C5B7B")
+legend("topleft", legend = c("Closing Price", "Trading Volume"),
+       col = c("#2E86AB", "#6C5B7B"), lty = c(1, 1), lwd = c(2, 4))
+dev.off()
+cat("  Saved: output/04_time_series.png\n")
+
+# 5. Box Plots
+png("output/05_boxplots.png", width = 1000, height = 500, res = 120)
+par(mfrow = c(1, 2), mar = c(5, 5, 4, 2))
+boxplot(helium_data$Close, col = "#2E86AB", border = "#1A5276",
+        main = "Closing Price Distribution", ylab = "Price (USD)")
+points(1, mean(helium_data$Close), col = "#E94F37", pch = 18, cex = 2)
+boxplot(helium_data$Volume / 1e6, col = "#6C5B7B", border = "#4A3F55",
+        main = "Trading Volume Distribution", ylab = "Volume (Millions)")
+points(1, mean(helium_data$Volume) / 1e6, col = "#E94F37", pch = 18, cex = 2)
+dev.off()
+cat("  Saved: output/05_boxplots.png\n")
+
+# 6. Correlation Matrix
+png("output/06_correlation_matrix.png", width = 800, height = 700, res = 120)
+numeric_data <- helium_data[, c("Open", "High", "Low", "Close", "Volume")]
+cor_matrix <- cor(numeric_data)
+heatmap(cor_matrix, col = colorRampPalette(c("#E94F37", "white", "#2E86AB"))(100),
+        symm = TRUE, margins = c(8, 8),
+        main = "Correlation Matrix: Helium Market Variables")
+dev.off()
+cat("  Saved: output/06_correlation_matrix.png\n")
+
+# 7. Residual Diagnostics
+png("output/07_residual_diagnostics.png", width = 1000, height = 800, res = 120)
+par(mfrow = c(2, 2))
+plot(model, which = c(1, 2, 3, 5), col = "#2E86AB", pch = 19)
+dev.off()
+cat("  Saved: output/07_residual_diagnostics.png\n")
+
+# 8. Density Plots
+png("output/08_density_plots.png", width = 1000, height = 500, res = 120)
+par(mfrow = c(1, 2), mar = c(5, 5, 4, 2))
+plot(density(helium_data$Close), col = "#2E86AB", lwd = 2,
+     main = "Density: Closing Price", xlab = "Price (USD)")
+polygon(density(helium_data$Close), col = adjustcolor("#2E86AB", alpha.f = 0.3))
+plot(density(helium_data$Volume / 1e6), col = "#6C5B7B", lwd = 2,
+     main = "Density: Trading Volume", xlab = "Volume (Millions)")
+polygon(density(helium_data$Volume / 1e6), col = adjustcolor("#6C5B7B", alpha.f = 0.3))
+dev.off()
+cat("  Saved: output/08_density_plots.png\n")
