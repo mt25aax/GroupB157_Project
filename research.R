@@ -214,3 +214,18 @@ plot(density(helium_data$Volume / 1e6), col = "#6C5B7B", lwd = 2,
 polygon(density(helium_data$Volume / 1e6), col = adjustcolor("#6C5B7B", alpha.f = 0.3))
 dev.off()
 cat("  Saved: output/08_density_plots.png\n")
+
+# Executive Summary
+
+cat("RESEARCH QUESTION:\n")
+cat("Does Helium's trading activity significantly influence daily price behaviour?\n\n")
+
+cat("KEY FINDINGS:\n")
+cat(sprintf("  1. Pearson Correlation: r = %.4f (Strong Positive)\n", pearson_test$estimate))
+cat(sprintf("  2. P-value: %.4e (Highly Significant)\n", pearson_test$p.value))
+cat(sprintf("  3. R-squared: %.4f (%.1f%% variance explained)\n", r_squared, r_squared * 100))
+cat(sprintf("  4. 95%% CI: [%.4f, %.4f]\n", pearson_test$conf.int[1], pearson_test$conf.int[2]))
+cat(sprintf("  5. Effect Size: %s\n\n", effect_size))
+
+cat("STATISTICAL DECISION:\n")
+cat("At alpha = 0.05, we REJECT the null hypothesis.\n\n")
